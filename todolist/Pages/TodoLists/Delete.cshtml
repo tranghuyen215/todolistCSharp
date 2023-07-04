@@ -1,0 +1,31 @@
+﻿@page
+@using System.Data.SqlClient;
+
+@{
+    String id = Request.Query["id"];
+    try
+    {
+        String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\trangng\\Documents\\testdb.mdf;Integrated Security=True;Connect Timeout=30";
+
+        using (SqlConnection connection = new SqlConnection(
+        connectionString))
+        {
+            connection.Open();
+            String sql = "Delete from Cards where id=@id";
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Exception: " + ex);
+    }
+
+    Response.Redirect("/TodoLists/Index");
+}
+
+}

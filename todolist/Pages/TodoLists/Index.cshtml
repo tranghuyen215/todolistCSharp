@@ -1,0 +1,21 @@
+﻿@page
+@model todolist.Pages.TodoLists.IndexModel
+@{
+}
+
+<br>
+<h2>List of cards</h2>
+<a class="btn btn-primary" href='/TodoLists/Create'> New Card</a>
+
+<div class="row">
+    @foreach (var item in Model.listCards)
+    {
+        <div class="column" style="padding: 10px; border: 1px solid #4CAF50">
+            <h2>@item.name</h2>
+            <p>@item.content</p>
+            <p>@item.create_at</p>
+            <a class="btn btn-primary" href='/TodoLists/Edit?id=@item.id'>Edit</a>
+            <a class="btn btn-danger" href='/TodoLists/Delete?id=@item.id'>Delete</a>
+        </div>
+    }
+</div>

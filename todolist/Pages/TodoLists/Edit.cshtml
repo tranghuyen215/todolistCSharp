@@ -1,0 +1,49 @@
+﻿@page
+@model todolist.Pages.TodoLists.EditModel
+@{
+}
+
+<br>
+<h2> Edit Card </h2>
+
+@if (Model.errorMessage.Length > 0)
+{
+    <div class="alert alert-warning fade show alert-dismissible" role="alert">
+        <strong>@Model.errorMessage</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<form method="POST">
+    <input type="hidden" name="id" value="@Model.cardInfo.id"/>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Name</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="name" value="@Model.cardInfo.name">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Content</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="content" value="@Model.cardInfo.content">
+        </div>
+    </div>
+
+    @if (Model.succeedMessage.Length > 0)
+    {
+        <div class="row mb-3">
+            <div class="alert alert-success fade show" role="alert">
+                <strong>@Model.succeedMessage</strong>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    <div class="row mb-3">
+        <div class="offset-sm-3 col-sm-3 d-grid">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-outline-primary" href="/TodoLists/Index" role="button"> Cancel</a>
+        </div>
+    </div>
+</form>
