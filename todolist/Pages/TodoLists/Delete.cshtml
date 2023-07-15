@@ -5,14 +5,14 @@
     String id = Request.Query["id"];
     try
     {
-        String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\trangng\\Documents\\testdb.mdf;Integrated Security=True;Connect Timeout=30";
+        string dbConn = DataProperties.dbConnection;
 
         using (SqlConnection connection = new SqlConnection(
-        connectionString))
+        dbConn))
         {
             connection.Open();
-            String sql = "Delete from Cards where id=@id";
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            String deleteCardSql = "Delete from Cards where id=@id";
+            using (SqlCommand command = new SqlCommand(deleteCardSql, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
                 command.ExecuteNonQuery();
@@ -25,7 +25,7 @@
         Console.WriteLine("Exception: " + ex);
     }
 
-    Response.Redirect("/TodoLists/Index");
+    Response.Redirect(DataProperties.indexPage);
 }
 
 }

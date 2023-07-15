@@ -8,11 +8,7 @@ using System.Data.SqlClient;
 
 namespace todolist.Pages.TodoLists
 {
-    static class Globals
-    {
-        // global string
-        public static String ConnectionString;
-    }
+
     public class IndexModel : PageModel
     {
         public List<TodoCard> listCards = new List<TodoCard>();
@@ -20,13 +16,14 @@ namespace todolist.Pages.TodoLists
         {
             try
             {
-                Globals.ConnectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\trangng\\Documents\\testdb.mdf;Integrated Security=True;Connect Timeout=30";
+
+                string dbConn = DataProperties.dbConnection;
                 using (SqlConnection connection = new SqlConnection(
-                Globals.ConnectionString))
+                dbConn))
                 {
                     connection.Open();
-                    String sql = "Select * from Cards";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    String getCardsSql = "Select * from Cards";
+                    using (SqlCommand command = new SqlCommand(getCardsSql, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {

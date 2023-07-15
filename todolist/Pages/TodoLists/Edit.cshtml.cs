@@ -13,18 +13,18 @@ namespace todolist.Pages.TodoLists
         public TodoCard cardInfo = new TodoCard();
         public String errorMessage = "";
         public String succeedMessage = "";
-
         public void OnGet()
         {
             String id = Request.Query["id"];
             try
             {
+                string dbConn = DataProperties.dbConnection;
                 using (SqlConnection connection = new SqlConnection(
-                Globals.ConnectionString))
+                dbConn))
                 {
                     connection.Open();
-                    String sql = "Select * from Cards where id=@id";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    String getCardSql = "Select * from Cards where id=@id";
+                    using (SqlCommand command = new SqlCommand(getCardSql, connection))
                     {
                         command.Parameters.AddWithValue("@id",id);
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -55,24 +55,25 @@ namespace todolist.Pages.TodoLists
             cardInfo.content = Request.Form["content"];
             if (cardInfo.name.Length == 0)
             {
-                errorMessage = "Card name must not be empty";
+                errorMessage = DataProperties.CardNameEmptyMessage;
                 return;
             }
             if (cardInfo.content.Length == 0)
             {
-                errorMessage = "Card content must not be empty";
+                errorMessage = DataProperties.CardContentEmptyMessage;
                 return;
             }
 
             try
             {
+                string dbConn = DataProperties.dbConnection;
                 using (SqlConnection connection = new SqlConnection(
-                Globals.ConnectionString))
+                dbConn))
                 {
                     connection.Open();
 
-                    String sql = "Select * from Cards where name=@name and id!=@id";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    String getCardSql = "Select * from Cards where name=@name and id!=@id";
+                    using (SqlCommand command = new SqlCommand(getCardSql, connection))
                     {
                         command.Parameters.AddWithValue("@name", cardInfo.name);
                         command.Parameters.AddWithValue("@id", cardInfo.id);
@@ -87,10 +88,10 @@ namespace todolist.Pages.TodoLists
                     }
 
 
-                    sql = "Update Cards " +
+                    string updateCardSql = "Update Cards " +
                                 "SET name=@name, content=@content " +
                                 "WHERE id=@id";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    using (SqlCommand command = new SqlCommand(updateCardSql, connection))
                     {
                         command.Parameters.AddWithValue("@name", cardInfo.name);
                         command.Parameters.AddWithValue("@content", cardInfo.content);
@@ -106,9 +107,7 @@ namespace todolist.Pages.TodoLists
                 return;
             }
 
-            succeedMessage = "Card updated successfully";
-
-            Response.Redirect("/TodoLists/Index");
+            Response.Redirect(DataProperties.indexPage);
         }
     }
 }

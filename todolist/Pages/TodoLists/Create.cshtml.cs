@@ -24,24 +24,25 @@ namespace todolist.Pages.TodoLists
             cardInfo.content = Request.Form["content"];
             if (cardInfo.name.Length == 0)
             {
-                errorMessage = "Card name must not be empty";
+                errorMessage = DataProperties.CardNameEmptyMessage;
                 return;
             }
             if (cardInfo.content.Length == 0)
             {
-                errorMessage = "Card content must not be empty";
+                errorMessage = DataProperties.CardContentEmptyMessage;
                 return;
             }
 
             try
             {
-                 using (SqlConnection connection = new SqlConnection(
-                 Globals.ConnectionString))
+                string dbConn = DataProperties.dbConnection;
+                using (SqlConnection connection = new SqlConnection(
+                dbConn))
                 {
                     connection.Open();
 
-                    String sql = "Select * from Cards where name=@name";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    String getCardSql = "Select * from Cards where name=@name";
+                    using (SqlCommand command = new SqlCommand(getCardSql, connection))
                     {
                         command.Parameters.AddWithValue("@name", cardInfo.name);
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -54,10 +55,10 @@ namespace todolist.Pages.TodoLists
                         }
                     }
 
-                    sql = "INSERT INTO Cards " +
+                    String insertCardSql = "INSERT INTO Cards " +
                         "(name, content) VALUES " +
                         "(@name,@content)";
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    using (SqlCommand command = new SqlCommand(insertCardSql, connection))
                     {
                         command.Parameters.AddWithValue("@name", cardInfo.name);
                         command.Parameters.AddWithValue("@content", cardInfo.content);
@@ -73,9 +74,8 @@ namespace todolist.Pages.TodoLists
             }
 
             cardInfo.name = ""; cardInfo.content = "";
-            succeedMessage = "New card added successfully";
 
-            Response.Redirect("/TodoLists/Index");
+            Response.Redirect(DataProperties.indexPage);
         }
     }
 }
